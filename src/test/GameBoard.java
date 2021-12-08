@@ -78,9 +78,12 @@ public class GameBoard extends JComponent implements KeyListener,MouseListener,M
         wall = new Wall(new Rectangle(0,0,DEF_WIDTH,DEF_HEIGHT),30,3,6/2,new Point(300,430));
 
         debugConsole = new DebugConsole(owner,wall,this);
-        //initialize the first level
         wall.nextLevel();
 
+        StartGameTimer();
+    }
+
+    private void StartGameTimer() {
         gameTimer = new Timer(10,e ->{
             wall.move();
             wall.findImpacts();
@@ -115,16 +118,24 @@ public class GameBoard extends JComponent implements KeyListener,MouseListener,M
 
     private void CheckNextLevel() {
         if(wall.hasLevel()){
-            message = "Go to Next Level";
-            gameTimer.stop();
-            wall.ballReset();
-            wall.wallReset();
-            wall.nextLevel();
+            NextLevel();
         }
         else{
-            message = "ALL WALLS DESTROYED";
-            gameTimer.stop();
+            FinishGame();
         }
+    }
+
+    private void FinishGame() {
+        message = "ALL WALLS DESTROYED";
+        gameTimer.stop();
+    }
+
+    private void NextLevel() {
+        message = "Go to Next Level";
+        gameTimer.stop();
+        wall.ballReset();
+        wall.wallReset();
+        wall.nextLevel();
     }
 
 
