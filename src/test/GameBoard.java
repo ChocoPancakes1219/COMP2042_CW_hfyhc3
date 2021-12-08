@@ -47,7 +47,7 @@ public class GameBoard extends JComponent implements KeyListener,MouseListener,M
 
     private boolean showPauseMenu;
 
-    private Font menuFont;
+    private final Font menuFont;
 
     private Rectangle continueButtonRect;
     private Rectangle exitButtonRect;
@@ -69,6 +69,11 @@ public class GameBoard extends JComponent implements KeyListener,MouseListener,M
 
 
         this.initialize();
+        Setup(owner);
+
+    }
+
+    private void Setup(JFrame owner) {
         message = "";
         wall = new Wall(new Rectangle(0,0,DEF_WIDTH,DEF_HEIGHT),30,3,6/2,new Point(300,430));
 
@@ -79,34 +84,48 @@ public class GameBoard extends JComponent implements KeyListener,MouseListener,M
         gameTimer = new Timer(10,e ->{
             wall.move();
             wall.findImpacts();
-            message = String.format("Bricks: %d Balls %d",wall.getBrickCount(),wall.getBallCount());
-            if(wall.isBallLost()){
-                if(wall.ballEnd()){
-                    wall.wallReset();
-                    message = "Game over";
-                }
-                wall.ballReset();
-                gameTimer.stop();
+            boolean NolivesLeft = wall.isBallLost();
+            boolean LevelComplete = wall.isDone();
+
+            DisplayLivesAndBrickCount();
+
+            if(NolivesLeft){
+                GameOver();
             }
-            else if(wall.isDone()){
-                if(wall.hasLevel()){
-                    message = "Go to Next Level";
-                    gameTimer.stop();
-                    wall.ballReset();
-                    wall.wallReset();
-                    wall.nextLevel();
-                }
-                else{
-                    message = "ALL WALLS DESTROYED";
-                    gameTimer.stop();
-                }
+            else if(LevelComplete){
+                CheckNextLevel();
             }
 
             repaint();
         });
-
     }
 
+    private void DisplayLivesAndBrickCount() {
+        message = String.format("Bricks: %d Balls %d",wall.getBrickCount(),wall.getBallCount());
+    }
+
+    private void GameOver() {
+        if(wall.ballEnd()){
+            wall.wallReset();
+            message = "Game over";
+        }
+        wall.ballReset();
+        gameTimer.stop();
+    }
+
+    private void CheckNextLevel() {
+        if(wall.hasLevel()){
+            message = "Go to Next Level";
+            gameTimer.stop();
+            wall.ballReset();
+            wall.wallReset();
+            wall.nextLevel();
+        }
+        else{
+            message = "ALL WALLS DESTROYED";
+            gameTimer.stop();
+        }
+    }
 
 
     private void initialize(){
