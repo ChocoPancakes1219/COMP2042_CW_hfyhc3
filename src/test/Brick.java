@@ -76,34 +76,34 @@ abstract public class Brick  {
                     start.setLocation(bounds.x + bounds.width, bounds.y);
                     end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
                     Point tmp = makeRandomPoint(start,end,VERTICAL);
-                    makeCrack(impact,tmp);
+                    drawcrack(impact,tmp);
 
                     break;
                 case RIGHT:
                     start.setLocation(bounds.getLocation());
                     end.setLocation(bounds.x, bounds.y + bounds.height);
                     tmp = makeRandomPoint(start,end,VERTICAL);
-                    makeCrack(impact,tmp);
+                    drawcrack(impact,tmp);
 
                     break;
                 case UP:
                     start.setLocation(bounds.x, bounds.y + bounds.height);
                     end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
                     tmp = makeRandomPoint(start,end,HORIZONTAL);
-                    makeCrack(impact,tmp);
+                    drawcrack(impact,tmp);
                     break;
                 case DOWN:
                     start.setLocation(bounds.getLocation());
                     end.setLocation(bounds.x + bounds.width, bounds.y);
                     tmp = makeRandomPoint(start,end,HORIZONTAL);
-                    makeCrack(impact,tmp);
+                    drawcrack(impact,tmp);
 
                     break;
 
             }
         }
 
-        protected void makeCrack(Point start, Point end){
+        protected void drawcrack(Point start, Point end){
 
             GeneralPath path = new GeneralPath();
 
