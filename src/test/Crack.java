@@ -1,20 +1,14 @@
 package test;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
 import java.util.Random;
 
 public class Crack {
-	 public final int CRACK_SECTIONS = 3;
-     public final double JUMP_PROBABILITY = 0.7;
-
-     public final int LEFT = 10;
-     public final int RIGHT = 20;
-     public final int UP = 30;
-     public final int DOWN = 40;
-     public final int VERTICAL = 100;
-     public final int HORIZONTAL = 200;
-
+	 public static final int CRACK_SECTIONS = 3;
+     public static final double JUMP_PROBABILITY = 0.7;
 
 
      private GeneralPath crack;
@@ -39,6 +33,45 @@ public class Crack {
      public void reset(){
          crack.reset();
      }
+     
+     protected void createCrack(Brick b,Point2D point, int direction){
+    	 Rectangle bounds = b.brickFace.getBounds();
+
+     Point impact = new Point((int)point.getX(),(int)point.getY());
+     Point start = new Point();
+     Point end = new Point();
+
+
+     switch(direction){
+         case Direction.LEFT:
+             start.setLocation(bounds.x + bounds.width, bounds.y);
+             end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
+             Point tmp = makeRandomPoint(start,end,Direction.VERTICAL);
+             drawCrack(impact,tmp);
+
+             break;
+         case Direction.RIGHT:
+             start.setLocation(bounds.getLocation());
+             end.setLocation(bounds.x, bounds.y + bounds.height);
+             tmp = makeRandomPoint(start,end,Direction.VERTICAL);
+             drawCrack(impact,tmp);
+
+             break;
+         case Direction.UP:
+             start.setLocation(bounds.x, bounds.y + bounds.height);
+             end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
+             tmp = makeRandomPoint(start,end,Direction.HORIZONTAL);
+             drawCrack(impact,tmp);
+             break;
+         case Direction.DOWN:
+             start.setLocation(bounds.getLocation());
+             end.setLocation(bounds.x + bounds.width, bounds.y);
+             tmp = makeRandomPoint(start,end,Direction.HORIZONTAL);
+             drawCrack(impact,tmp);
+
+             break;
+
+     }}
      
      protected void drawCrack(Point start, Point end){
 
@@ -97,11 +130,11 @@ public class Crack {
          int pos;
 
          switch(direction){
-             case HORIZONTAL:
+             case Direction.HORIZONTAL:
                  pos = rnd.nextInt(to.x - from.x) + from.x;
                  out.setLocation(pos,to.y);
                  break;
-             case VERTICAL:
+             case Direction.VERTICAL:
                  pos = rnd.nextInt(to.y - from.y) + from.y;
                  out.setLocation(to.x,pos);
                  break;
@@ -116,18 +149,18 @@ public class Crack {
 	        return 0;
 	    int out  = 0;
 	    if(brick.brickFace.contains(b.right))
-	        out = Brick.LEFT_IMPACT;
+	        out = Direction.LEFT_IMPACT;
 	    else if(brick.brickFace.contains(b.left))
-	        out = Brick.RIGHT_IMPACT;
+	        out = Direction.RIGHT_IMPACT;
 	    else if(brick.brickFace.contains(b.up))
-	        out = Brick.DOWN_IMPACT;
+	        out = Direction.DOWN_IMPACT;
 	    else if(brick.brickFace.contains(b.down))
-	        out = Brick.UP_IMPACT;
+	        out = Direction.UP_IMPACT;
 	    return out;
 	}
 
 
 
-private static Random rnd = new Random();
+private Random rnd = new Random();
      
 }

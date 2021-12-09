@@ -16,67 +16,14 @@ abstract public class Brick  {
     public static final int DEF_STEPS = 35;
 
 
-    public static final int UP_IMPACT = 100;
-    public static final int DOWN_IMPACT = 200;
-    public static final int LEFT_IMPACT = 300;
-    public static final int RIGHT_IMPACT = 400;
-    
-    public final int VERTICAL = 100;
-    public final int HORIZONTAL = 200;
-    public static final int LEFT = 10;
-    public static final int RIGHT = 20;
-    public static final int UP = 30;
-    public static final int DOWN = 40;
-
-
-
     private int crackDepth;
     private int steps;
     
     Crack crack = new Crack(crackDepth,steps);
     
     
-
-
-
         protected void makeCrack(Point2D point, int direction){
-            Rectangle bounds = Brick.this.brickFace.getBounds();
-
-            Point impact = new Point((int)point.getX(),(int)point.getY());
-            Point start = new Point();
-            Point end = new Point();
-
-
-            switch(direction){
-                case LEFT:
-                    start.setLocation(bounds.x + bounds.width, bounds.y);
-                    end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
-                    Point tmp = crack.makeRandomPoint(start,end,VERTICAL);
-                    crack.drawCrack(impact,tmp);
-
-                    break;
-                case RIGHT:
-                    start.setLocation(bounds.getLocation());
-                    end.setLocation(bounds.x, bounds.y + bounds.height);
-                    tmp = crack.makeRandomPoint(start,end,VERTICAL);
-                    crack.drawCrack(impact,tmp);
-
-                    break;
-                case UP:
-                    start.setLocation(bounds.x, bounds.y + bounds.height);
-                    end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
-                    tmp = crack.makeRandomPoint(start,end,HORIZONTAL);
-                    crack.drawCrack(impact,tmp);
-                    break;
-                case DOWN:
-                    start.setLocation(bounds.getLocation());
-                    end.setLocation(bounds.x + bounds.width, bounds.y);
-                    tmp = crack.makeRandomPoint(start,end,HORIZONTAL);
-                    crack.drawCrack(impact,tmp);
-
-                    break;
-
-            }
+            crack.createCrack(Brick.this,point,direction);
         }
 
 
