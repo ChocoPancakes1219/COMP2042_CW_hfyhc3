@@ -203,12 +203,7 @@ public class HomeMenu extends JComponent implements MouseListener, MouseMotionLi
 
 
         if(startClicked){
-            Color tmp = g2d.getColor();
-            g2d.setColor(Formatting.CLICKED_BUTTON_COLOR);
-            g2d.draw(startButton);
-            g2d.setColor(Formatting.CLICKED_TEXT);
-            g2d.drawString(Formatting.START_TEXT,x,y);
-            g2d.setColor(tmp);
+            formatStartButton(g2d, x, y);
         }
         else{
             g2d.draw(startButton);
@@ -232,13 +227,7 @@ public class HomeMenu extends JComponent implements MouseListener, MouseMotionLi
         y += menuButton.y + (startButton.height * 0.9);
 
         if(menuClicked){
-            Color tmp = g2d.getColor();
-
-            g2d.setColor(Formatting.CLICKED_BUTTON_COLOR);
-            g2d.draw(menuButton);
-            g2d.setColor(Formatting.CLICKED_TEXT);
-            g2d.drawString(Formatting.MENU_TEXT,x,y);
-            g2d.setColor(tmp);
+            formatMenuButton(g2d, x, y);
         }
         else{
             g2d.draw(menuButton);
@@ -247,6 +236,27 @@ public class HomeMenu extends JComponent implements MouseListener, MouseMotionLi
 
     }
 
+
+	private void formatMenuButton(Graphics2D g2d, int x, int y) {
+		Color menucolor = g2d.getColor();
+
+		g2d.setColor(Formatting.CLICKED_BUTTON_COLOR);
+		g2d.draw(menuButton);
+		g2d.setColor(Formatting.CLICKED_TEXT);
+		g2d.drawString(Formatting.MENU_TEXT,x,y);
+		g2d.setColor(menucolor);
+	}
+
+
+	private void formatStartButton(Graphics2D g2d, int x, int y) {
+		Color startcolor = g2d.getColor();
+		g2d.setColor(Formatting.CLICKED_BUTTON_COLOR);
+		g2d.draw(startButton);
+		g2d.setColor(Formatting.CLICKED_TEXT);
+		g2d.drawString(Formatting.START_TEXT,x,y);
+		g2d.setColor(startcolor);
+	}
+	
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         Point p = mouseEvent.getPoint();
