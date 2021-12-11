@@ -35,19 +35,19 @@ public class DebugPanel extends JPanel {
     private JSlider ballXSpeed;
     private JSlider ballYSpeed;
 
-    private Levels levels;
+    private LevelFrame levelFrame;
 
-    public DebugPanel(Levels levels){
+    public DebugPanel(LevelFrame levelFrame){
 
-        this.levels = levels;
+        this.levelFrame = levelFrame;
 
         initialize();
 
-        skipLevel = makeButton("Skip Level",e -> levels.nextLevel());
-        resetBalls = makeButton("Reset Balls",e -> levels.resetBallCount());
+        skipLevel = makeButton("Skip Level",e -> levelFrame.nextLevel());
+        resetBalls = makeButton("Reset Balls",e -> levelFrame.resetBallCount());
 
-        ballXSpeed = makeSlider(-4,4,e -> levels.setBallXSpeed(ballXSpeed.getValue()));
-        ballYSpeed = makeSlider(-4,4,e -> levels.setBallYSpeed(ballYSpeed.getValue()));
+        ballXSpeed = makeSlider(-4,4,e -> levelFrame.setBallXSpeed(ballXSpeed.getValue()));
+        ballYSpeed = makeSlider(-4,4,e -> levelFrame.setBallYSpeed(ballYSpeed.getValue()));
 
         this.add(skipLevel);
         this.add(resetBalls);

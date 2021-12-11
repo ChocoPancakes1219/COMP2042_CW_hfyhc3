@@ -19,7 +19,7 @@ package test;
 
 import java.awt.*;
 
-
+//Initialize the Application
 public class GraphicsMain {
 
     public static void main(String[] args){

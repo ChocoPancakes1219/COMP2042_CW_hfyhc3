@@ -25,15 +25,16 @@ import java.util.Random;
 public class SteelBrick extends Brick {
 
     private static final String NAME = "Steel Brick";
+    private static final Color SteelBrick_Inner_Color = new Color(203, 203, 201);
+    private static final Color SteelBrick_Border_Color = Color.BLACK;
     private static final int STEEL_STRENGTH = 1;
     private static final double STEEL_PROBABILITY = 0.4;
-
 
     private Random rnd;
     private Shape brickFace;
 
     public SteelBrick(Point point, Dimension size){
-        super(NAME,point,size, Formatting.STEEL_BRICK_BORDER, Formatting.STEEL_BRICK_INNER,STEEL_STRENGTH);
+        super(NAME,point,size, SteelBrick_Border_Color, SteelBrick_Inner_Color,STEEL_STRENGTH);
         rnd = new Random();
         brickFace = super.brickFace;
     }

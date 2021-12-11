@@ -11,6 +11,8 @@ import java.awt.Point;
 public class ClayBrick extends Brick {
 
     private static final String NAME = "Clay Brick";
+    private static final Color ClayBrick_Inner_Color = new Color(178, 34, 34).darker();
+    private static final Color ClayBrick_Border_Color = Color.GRAY;
     private static final int CLAY_STRENGTH = 1;
 
 
@@ -19,7 +21,7 @@ public class ClayBrick extends Brick {
 
 
     public ClayBrick(Point point, Dimension size){
-        super(NAME,point,size, Formatting.CLAY_BRICK_BORDER, Formatting.CLAY_BRICK_INNER,CLAY_STRENGTH);
+        super(NAME,point,size, ClayBrick_Border_Color, ClayBrick_Inner_Color,CLAY_STRENGTH);
     }
 
     @Override

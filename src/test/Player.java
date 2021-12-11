@@ -18,10 +18,15 @@
 package test;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 
 public class Player {
 
+
+    public static final Color BORDER_COLOR = Color.GREEN.darker().darker();
+    public static final Color INNER_COLOR = Color.GREEN;
 
     private static final int DEF_MOVE_AMOUNT = 5;
 
@@ -80,15 +85,15 @@ public class Player {
     }
 
     void drawPlayer(Graphics2D g2d){
-        Color tmp = g2d.getColor();
+        Color Playercolor = g2d.getColor();
 
         Shape s = getPlayerFace();
-        g2d.setColor(Formatting.PLAYER_INNER_COLOR);
+        g2d.setColor(INNER_COLOR);
         g2d.fill(s);
 
-        g2d.setColor(Formatting.PLAYER_BORDER_COLOR);
+        g2d.setColor(BORDER_COLOR);
         g2d.draw(s);
 
-        g2d.setColor(tmp);
+        g2d.setColor(Playercolor);
     }
 }

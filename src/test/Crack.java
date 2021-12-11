@@ -40,34 +40,35 @@ public class Crack {
      Point impact = new Point((int)point.getX(),(int)point.getY());
      Point start = new Point();
      Point end = new Point();
+         Point CrackPoint;
 
 
      switch(direction){
          case Direction.LEFT:
              start.setLocation(bounds.x + bounds.width, bounds.y);
              end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
-             Point tmp = makeRandomPoint(start,end,Direction.VERTICAL);
-             drawCrack(impact,tmp);
+             CrackPoint = makeRandomPoint(start,end,Direction.VERTICAL);
+             drawCrack(impact,CrackPoint);
 
              break;
          case Direction.RIGHT:
              start.setLocation(bounds.getLocation());
              end.setLocation(bounds.x, bounds.y + bounds.height);
-             tmp = makeRandomPoint(start,end,Direction.VERTICAL);
-             drawCrack(impact,tmp);
+             CrackPoint = makeRandomPoint(start,end,Direction.VERTICAL);
+             drawCrack(impact,CrackPoint);
 
              break;
          case Direction.UP:
              start.setLocation(bounds.x, bounds.y + bounds.height);
              end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
-             tmp = makeRandomPoint(start,end,Direction.HORIZONTAL);
-             drawCrack(impact,tmp);
+             CrackPoint = makeRandomPoint(start,end,Direction.HORIZONTAL);
+             drawCrack(impact,CrackPoint);
              break;
          case Direction.DOWN:
              start.setLocation(bounds.getLocation());
              end.setLocation(bounds.x + bounds.width, bounds.y);
-             tmp = makeRandomPoint(start,end,Direction.HORIZONTAL);
-             drawCrack(impact,tmp);
+             CrackPoint = makeRandomPoint(start,end,Direction.HORIZONTAL);
+             drawCrack(impact,CrackPoint);
 
              break;
 

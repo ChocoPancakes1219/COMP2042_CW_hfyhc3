@@ -1,5 +1,10 @@
 package test;
+import javax.swing.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 
 public class Score {
@@ -15,20 +20,20 @@ public class Score {
     public static void DeductScore() {
         Score=Score-500;
     }
-    public static void ResetScore() {
-        Score=0;
+    public static void ResetScore() {  Score=0;
+    if(Score>HighScore)
+    {HighScore=Score;}
     }
 
     public static int getScore(){
         return Score;
     }
-
-    public static void Compare(){
-        if (Score> HighScore){
-            HighScore =Score;
-
-        }
+    public static int getHighScore(){
+        return HighScore;
     }
+
+
+
 
 
 }

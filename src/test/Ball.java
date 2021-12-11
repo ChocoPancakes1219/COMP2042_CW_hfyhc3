@@ -25,41 +25,46 @@ abstract public class Ball {
     private int speedX;
     private int speedY;
 
+    //Set location and create Ball
     public Ball(Point2D center,int radiusA,int radiusB,Color inner,Color border){
         this.center = center;
 
-        up = new Point2D.Double();
-        down = new Point2D.Double();
-        left = new Point2D.Double();
-        right = new Point2D.Double();
-
-        up.setLocation(center.getX(),center.getY()-(radiusB / 2));
-        down.setLocation(center.getX(),center.getY()+(radiusB / 2));
-
-        left.setLocation(center.getX()-(radiusA /2),center.getY());
-        right.setLocation(center.getX()+(radiusA /2),center.getY());
+        SetBallLocation(center, radiusA, radiusB);
 
 
-        ballFace = makeBall(center,radiusA,radiusB);
+        ballFace = drawBall(center,radiusA,radiusB);
         this.border = border;
         this.inner  = inner;
         speedX = 0;
         speedY = 0;
     }
 
-    protected abstract Shape makeBall(Point2D center,int radiusA,int radiusB);
+    private void SetBallLocation(Point2D center, int radiusA, int radiusB) {
+        up = new Point2D.Double();
+        down = new Point2D.Double();
+        left = new Point2D.Double();
+        right = new Point2D.Double();
+
+        up.setLocation(center.getX(), center.getY()-(radiusB / 2));
+        down.setLocation(center.getX(), center.getY()+(radiusB / 2));
+
+        left.setLocation(center.getX()-(radiusA /2), center.getY());
+        right.setLocation(center.getX()+(radiusA /2), center.getY());
+    }
+
+    protected abstract Shape drawBall(Point2D center, int radiusA, int radiusB);
 
     public void move(){
-        RectangularShape tmp = (RectangularShape) ballFace;
+        RectangularShape path = (RectangularShape) ballFace;
         center.setLocation((center.getX() + speedX),(center.getY() + speedY));
-        double w = tmp.getWidth();
-        double h = tmp.getHeight();
+        double w = path.getWidth();
+        double h = path.getHeight();
 
-        tmp.setFrame((center.getX() -(w / 2)),(center.getY() - (h / 2)),w,h);
+        path.setFrame((center.getX() -(w / 2)),(center.getY() - (h / 2)),w,h);
         setPoints(w,h);
 
 
-        ballFace = tmp;
+        ballFace = path;
     }
 
     public void setSpeed(int x,int y){
@@ -102,12 +107,12 @@ abstract public class Ball {
     public void moveTo(Point p){
         center.setLocation(p);
 
-        RectangularShape tmp = (RectangularShape) ballFace;
-        double w = tmp.getWidth();
-        double h = tmp.getHeight();
+        RectangularShape movepath = (RectangularShape) ballFace;
+        double w = movepath.getWidth();
+        double h = movepath.getHeight();
 
-        tmp.setFrame((center.getX() -(w / 2)),(center.getY() - (h / 2)),w,h);
-        ballFace = tmp;
+        movepath.setFrame((center.getX() -(w / 2)),(center.getY() - (h / 2)),w,h);
+        ballFace = movepath;
     }
 
     private void setPoints(double width,double height){
@@ -127,26 +132,4 @@ abstract public class Ball {
     }
 
 
-    boolean impactWall(Levels levels){
-        for(Brick b : levels.levelGenerator.getBricks()){
-            switch(b.crack.findImpact(b, this)) {
-                //Vertical Impact
-                case Direction.UP_IMPACT:
-                    reverseY();
-                    return b.setImpact(down, Direction.UP);
-                case Direction.DOWN_IMPACT:
-                    reverseY();
-                    return b.setImpact(up,Direction.DOWN);
-
-                //Horizontal Impact
-                case Direction.LEFT_IMPACT:
-                    reverseX();
-                    return b.setImpact(right,Direction.RIGHT);
-                case Direction.RIGHT_IMPACT:
-                    reverseX();
-                    return b.setImpact(left,Direction.LEFT);
-            }
-        }
-        return false;
-    }
 }
