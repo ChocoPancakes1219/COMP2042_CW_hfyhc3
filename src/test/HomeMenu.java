@@ -184,7 +184,7 @@ public class HomeMenu extends JComponent implements MouseListener, MouseMotionLi
         FontRenderContext frc = g2d.getFontRenderContext();
 
         Rectangle2D txtRect = buttonFont.getStringBounds(Formatting.START_TEXT,frc);
-        Rectangle2D mTxtRect = buttonFont.getStringBounds(Formatting.MENU_TEXT,frc);
+        Rectangle2D mTxtRect = buttonFont.getStringBounds(Formatting.EXIT_TEXT,frc);
 
         g2d.setFont(buttonFont);
 
@@ -231,7 +231,7 @@ public class HomeMenu extends JComponent implements MouseListener, MouseMotionLi
         }
         else{
             g2d.draw(menuButton);
-            g2d.drawString(Formatting.MENU_TEXT,x,y);
+            g2d.drawString(Formatting.EXIT_TEXT,x,y);
         }
 
     }
@@ -243,7 +243,7 @@ public class HomeMenu extends JComponent implements MouseListener, MouseMotionLi
 		g2d.setColor(Formatting.CLICKED_BUTTON_COLOR);
 		g2d.draw(menuButton);
 		g2d.setColor(Formatting.CLICKED_TEXT);
-		g2d.drawString(Formatting.MENU_TEXT,x,y);
+		g2d.drawString(Formatting.EXIT_TEXT,x,y);
 		g2d.setColor(menucolor);
 	}
 

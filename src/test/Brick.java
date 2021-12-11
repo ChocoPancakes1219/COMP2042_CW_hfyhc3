@@ -74,7 +74,7 @@ abstract public class Brick  {
     }
 
 
-    public final boolean isBroken(){
+    public boolean isBroken(){
         return broken;
     }
 
@@ -89,6 +89,17 @@ abstract public class Brick  {
     }
 
 
+    void drawBrick(Graphics2D g2d){
+        Color tmp = g2d.getColor();
 
+        g2d.setColor(getInnerColor());
+        g2d.fill(getBrick());
+
+        g2d.setColor(getBorderColor());
+        g2d.draw(getBrick());
+
+
+        g2d.setColor(tmp);
+    }
 }
 

@@ -127,4 +127,26 @@ abstract public class Ball {
     }
 
 
+    boolean impactWall(Levels levels){
+        for(Brick b : levels.levelGenerator.getBricks()){
+            switch(b.crack.findImpact(b, this)) {
+                //Vertical Impact
+                case Direction.UP_IMPACT:
+                    reverseY();
+                    return b.setImpact(down, Direction.UP);
+                case Direction.DOWN_IMPACT:
+                    reverseY();
+                    return b.setImpact(up,Direction.DOWN);
+
+                //Horizontal Impact
+                case Direction.LEFT_IMPACT:
+                    reverseX();
+                    return b.setImpact(right,Direction.RIGHT);
+                case Direction.RIGHT_IMPACT:
+                    reverseX();
+                    return b.setImpact(left,Direction.LEFT);
+            }
+        }
+        return false;
+    }
 }
