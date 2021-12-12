@@ -1,10 +1,6 @@
 package test;
 
 
-import java.io.*;
-import java.lang.*;
-import java.util.Arrays;
-import java.util.Scanner;
 
 import javax.swing.*;
 
@@ -74,30 +70,29 @@ public class Score extends JComponent{
      * @param s	Current Score
      */
     public static void checkHighScore(int s){
-    int n=s;
-        if( n > Leaderboard[4]) {
+        if( s > Leaderboard[4]) {
 
-            Leaderboard[4] = n;
+            Leaderboard[4] = s;
 
-            if (n > Leaderboard[3]) {
+            if (s > Leaderboard[3]) {
 
                 Leaderboard[4] = Leaderboard[3];
-                Leaderboard[3] = n;
+                Leaderboard[3] = s;
 
-                if (n > Leaderboard[2]) {
+                if (s > Leaderboard[2]) {
 
                     Leaderboard[3] = Leaderboard[2];
-                    Leaderboard[2] = n;
+                    Leaderboard[2] = s;
 
-                    if (n > Leaderboard[1]) {
+                    if (s > Leaderboard[1]) {
 
                         Leaderboard[2] = Leaderboard[1];
-                        Leaderboard[1] = n;
+                        Leaderboard[1] = s;
 
-                        if (n > Leaderboard[0]) {
+                        if (s > Leaderboard[0]) {
 
                             Leaderboard[1] = Leaderboard[0];
-                            Leaderboard[0] = n;
+                            Leaderboard[0] = s;
                         }
                     }
                 }

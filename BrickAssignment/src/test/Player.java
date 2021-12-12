@@ -47,7 +47,7 @@ public class Player {
 
 
     /**
-     * Main class of Player
+     * Constructor of Player
      * @param ballPoint point of ball location
      * @param width width of player
      * @param height height of player

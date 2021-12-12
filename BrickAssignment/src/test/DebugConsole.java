@@ -25,7 +25,7 @@ import java.awt.event.WindowListener;
 /**
  * DebugConsole.java
  * An class that extends JDialog and implements WindowListener
- * class to initialize DebugPanel
+ * Initializer for Interface for Debug Panel
  *
  * Created: by filippo on 04/09/16.
  *
@@ -46,7 +46,7 @@ public class DebugConsole extends JDialog implements WindowListener{
 
 
     /**
-     * Main class for DebugConsole.java
+     * Constructor for DebugConsole.java
      * @param owner is the user info
      * @param mainGame is the current level
      * @param gameInterface is the main game sprite

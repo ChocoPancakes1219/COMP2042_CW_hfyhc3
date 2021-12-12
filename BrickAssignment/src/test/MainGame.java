@@ -40,7 +40,18 @@ public class MainGame {
     private Random rnd;
     private Rectangle area;
 
-    Ball ball;
+    private static final int UP_IMPACT = 100;
+    private static final int DOWN_IMPACT = 200;
+    private static final int LEFT_IMPACT = 300;
+    private static final int RIGHT_IMPACT = 400;
+
+    private static final int LEFT = 10;
+    private static final int RIGHT = 20;
+    private static final int UP = 30;
+    private static final int DOWN = 40;
+
+
+    RubberBall ball;
     Player player;
 
     private Point startPoint;
@@ -48,7 +59,7 @@ public class MainGame {
     private boolean ballLost;
 
     /**
-     * Main Class For Level Frame
+     * Constructor For Main Game
      * @param drawArea area of wall
      * @param brickCount brick count of level
      * @param lineCount lines of brick
@@ -56,6 +67,9 @@ public class MainGame {
      * @param ballPos position of ball
      */
     public MainGame(Rectangle drawArea, int brickCount, int lineCount, double brickDimensionRatio, Point ballPos){
+
+
+
 
         this.startPoint = new Point(ballPos);
 
@@ -124,7 +138,8 @@ public class MainGame {
             * because for every brick program checks for horizontal and vertical impacts
             */
             levelBuilder.setBrickCount(levelBuilder.getBrickCount() - 1);
-            Score.AddScore();
+            GameInterface.ScorePoint();
+
         }
         else if(impactBorder()) {
             ball.reverseX();
@@ -133,7 +148,8 @@ public class MainGame {
             ball.reverseY();
         }
         else if(ball.getPosition().getY() > area.getY() + area.getHeight()){
-            Score.DeductScore();
+            GameInterface.LosePoint();
+
             ballCount--;
             ballLost = true;
         }
@@ -145,22 +161,22 @@ public class MainGame {
      */
     private boolean impactWall(){
         for(Brick b : levelBuilder.getBricks()){
-            switch(b.crack.findImpact(b, ball)) {
+            switch(b.findImpact( ball)) {
                 //Vertical Impact
-                case Direction.UP_IMPACT:
+                case UP_IMPACT:
                     ball.reverseY();
-                    return b.setImpact(ball.down, Direction.UP);
-                case Direction.DOWN_IMPACT:
+                    return b.setImpact(ball.down, UP);
+                case DOWN_IMPACT:
                     ball.reverseY();
-                    return b.setImpact(ball.up,Direction.DOWN);
+                    return b.setImpact(ball.up,DOWN);
 
                 //Horizontal Impact
-                case Direction.LEFT_IMPACT:
+                case LEFT_IMPACT:
                     ball.reverseX();
-                    return b.setImpact(ball.right,Direction.RIGHT);
-                case Direction.RIGHT_IMPACT:
+                    return b.setImpact(ball.right,RIGHT);
+                case RIGHT_IMPACT:
                     ball.reverseX();
-                    return b.setImpact(ball.left,Direction.LEFT);
+                    return b.setImpact(ball.left,LEFT);
             }
         }
         return false;

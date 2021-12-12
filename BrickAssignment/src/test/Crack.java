@@ -1,7 +1,6 @@
 package test;
 
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.Random;
@@ -18,88 +17,102 @@ import java.util.Random;
  *
  */
 public class Crack {
-	 public static final int CRACK_SECTIONS = 3;
-     public static final double JUMP_PROBABILITY = 0.7;
 
+    private static final int CRACK_SECTIONS = 3;
+    private static final double JUMP_PROBABILITY = 0.7;
 
-     private GeneralPath crack;
+    private static final int LEFT = 10;
+    private static final int RIGHT = 20;
+    private static final int UP = 30;
+    private static final int DOWN = 40;
 
-     private int crackDepth;
-     private int steps;
+    private static final int VERTICAL = 100;
+    private static final int HORIZONTAL = 200;
+
+    private final Brick brick;
+    private GeneralPath crack;
+
+    private int crackDepth;
+    private int steps;
+
 
     /**
-     * Main class of Crack.java
-     * @param crackDepth in how deep the crack will be on the brick
-     * @param steps is the times where each individual small crack occurs
+     * Constructor for Crack
+     * @param brick info of brick
+     * @param crackDepth depth of crack
+     * @param steps points of crack seperate
      */
-    public Crack(int crackDepth, int steps){
+    public Crack(Brick brick, int crackDepth, int steps){
+        this.brick = brick;
 
-         crack = new GeneralPath();
-         this.crackDepth = crackDepth;
-         this.steps = steps;
+        crack = new GeneralPath();
+        this.crackDepth = crackDepth;
+        this.steps = steps;
 
-     }
+    }
+
 
     /**
      *
      * @return path of the crack
      */
     public GeneralPath draw(){
-         return crack;
-     }
+
+        return crack;
+    }
 
     /**
      * Reset all cracks on a brick
      */
     public void reset(){
-         crack.reset();
-     }
+        crack.reset();
+    }
 
     /**
      * Create crack on a brick
-     * @param b is the info of the specific brick
      * @param point is the point of impact with the ball
      * @param direction is the direction that the impact comes from
      */
-    protected void createCrack(Brick b,Point2D point, int direction){
-    	 Rectangle bounds = b.brickFace.getBounds();
-
-     Point impact = new Point((int)point.getX(),(int)point.getY());
-     Point start = new Point();
-     Point end = new Point();
-         Point CrackPoint;
+    protected void makeCrack(Point2D point, int direction){
+        Rectangle bounds = brick.brickFace.getBounds();
 
 
-     switch(direction){
-         case Direction.LEFT:
-             start.setLocation(bounds.x + bounds.width, bounds.y);
-             end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
-             CrackPoint = makeRandomPoint(start,end,Direction.VERTICAL);
-             drawCrack(impact,CrackPoint);
+        Point impact = new Point((int)point.getX(),(int)point.getY());
+        Point start = new Point();
+        Point end = new Point();
 
-             break;
-         case Direction.RIGHT:
-             start.setLocation(bounds.getLocation());
-             end.setLocation(bounds.x, bounds.y + bounds.height);
-             CrackPoint = makeRandomPoint(start,end,Direction.VERTICAL);
-             drawCrack(impact,CrackPoint);
 
-             break;
-         case Direction.UP:
-             start.setLocation(bounds.x, bounds.y + bounds.height);
-             end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
-             CrackPoint = makeRandomPoint(start,end,Direction.HORIZONTAL);
-             drawCrack(impact,CrackPoint);
-             break;
-         case Direction.DOWN:
-             start.setLocation(bounds.getLocation());
-             end.setLocation(bounds.x + bounds.width, bounds.y);
-             CrackPoint = makeRandomPoint(start,end,Direction.HORIZONTAL);
-             drawCrack(impact,CrackPoint);
+        switch(direction){
+            case LEFT:
+                start.setLocation(bounds.x + bounds.width, bounds.y);
+                end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
+                Point Randompoint = makeRandomPoint(start,end,VERTICAL);
+                drawCrack(impact,Randompoint);
 
-             break;
+                break;
+            case RIGHT:
+                start.setLocation(bounds.getLocation());
+                end.setLocation(bounds.x, bounds.y + bounds.height);
+                Randompoint = makeRandomPoint(start,end,VERTICAL);
+                drawCrack(impact,Randompoint);
 
-     }}
+                break;
+            case UP:
+                start.setLocation(bounds.x, bounds.y + bounds.height);
+                end.setLocation(bounds.x + bounds.width, bounds.y + bounds.height);
+                Randompoint = makeRandomPoint(start,end,HORIZONTAL);
+                drawCrack(impact,Randompoint);
+                break;
+            case DOWN:
+                start.setLocation(bounds.getLocation());
+                end.setLocation(bounds.x + bounds.width, bounds.y);
+                Randompoint = makeRandomPoint(start,end,HORIZONTAL);
+                drawCrack(impact,Randompoint);
+
+                break;
+
+        }
+    }
 
     /**
      * Draw crack on the brick
@@ -108,34 +121,34 @@ public class Crack {
      */
     protected void drawCrack(Point start, Point end){
 
-         GeneralPath path = new GeneralPath();
+        GeneralPath path = new GeneralPath();
 
 
-         path.moveTo(start.x,start.y);
+        path.moveTo(start.x,start.y);
 
-         double w = (end.x - start.x) / (double)steps;
-         double h = (end.y - start.y) / (double)steps;
+        double w = (end.x - start.x) / (double)steps;
+        double h = (end.y - start.y) / (double)steps;
 
-         int bound = crackDepth;
-         int jump  = bound * 5;
+        int bound = crackDepth;
+        int jump  = bound * 5;
 
-         double x,y;
+        double x,y;
 
-         for(int i = 1; i < steps;i++){
+        for(int i = 1; i < steps;i++){
 
-             x = (i * w) + start.x;
-             y = (i * h) + start.y + randomInBounds(bound);
+            x = (i * w) + start.x;
+            y = (i * h) + start.y + randomInBounds(bound);
 
-             if(inMiddle(i, steps))
-                 y += jumps(jump);
+            if(inMiddle(i,CRACK_SECTIONS,steps))
+                y += jumps(jump,JUMP_PROBABILITY);
 
-             path.lineTo(x,y);
+            path.lineTo(x,y);
 
-         }
+        }
 
-         path.lineTo(end.x,end.y);
-         crack.append(path,true);
-     }
+        path.lineTo(end.x,end.y);
+        crack.append(path,true);
+    }
 
     /**
      * Random point where the crack extends in other direction
@@ -143,9 +156,11 @@ public class Crack {
      * @return the random integer generated
      */
     private int randomInBounds(int bound){
-         int n = (bound * 2) + 1;
-         return rnd.nextInt(n) - bound;
-     }
+
+        Random randombound = new Random();
+        int n = (bound * 2) + 1;
+        return randombound.nextInt(n) - bound;
+    }
 
     /**
      * Start division of the crack to random direction
@@ -153,63 +168,53 @@ public class Crack {
      * @param divisions division of the crack
      * @return direction of crack division
      */
-    private boolean inMiddle(int i, int divisions){
-         int low = (Crack.CRACK_SECTIONS / divisions);
-         int up = low * (divisions - 1);
+    private boolean inMiddle(int i,int steps,int divisions){
+        int low = (steps / divisions);
+        int up = low * (divisions - 1);
 
-         return  (i > low) && (i < up);
-     }
-
-     private int jumps(int bound){
-
-         if(rnd.nextDouble() > Crack.JUMP_PROBABILITY)
-             return randomInBounds(bound);
-         return  0;
-
-     }
-
-     public Point makeRandomPoint(Point from,Point to, int direction){
-
-         Point out = new Point();
-         int pos;
-
-         switch (direction) {
-             case Direction.HORIZONTAL -> {
-                 pos = rnd.nextInt(to.x - from.x) + from.x;
-                 out.setLocation(pos, to.y);
-             }
-             case Direction.VERTICAL -> {
-                 pos = rnd.nextInt(to.y - from.y) + from.y;
-                 out.setLocation(to.x, pos);
-             }
-         }
-         return out;
-     }
-
+        return  (i > low) && (i < up);
+    }
 
     /**
-     * Find the impact point of the ball on the brick
-     * @param brick is the info of the brick
-     * @param b is the infor of the ball
-     * @return direction where the impact comes from
+     * potential point to extend crack
+     * @param bound jump point
+     * @param probability probability of jumps
+     * @return
      */
-    public final int findImpact(Brick brick, Ball b){
-	    if(brick.broken)
-	        return 0;
-	    int out  = 0;
-	    if(brick.brickFace.contains(b.right))
-	        out = Direction.LEFT_IMPACT;
-	    else if(brick.brickFace.contains(b.left))
-	        out = Direction.RIGHT_IMPACT;
-	    else if(brick.brickFace.contains(b.up))
-	        out = Direction.DOWN_IMPACT;
-	    else if(brick.brickFace.contains(b.down))
-	        out = Direction.UP_IMPACT;
-	    return out;
-	}
+    private int jumps(int bound,double probability){
+
+        Random randomdouble=new Random();
+        if(randomdouble.nextDouble() > probability)
+            return randomInBounds(bound);
+        return  0;
+
+    }
+
+    /**
+     * Create random line of cracks
+     * @param from start location
+     * @param to end location
+     * @param direction direction of extension
+     * @return new location
+     */
+    private Point makeRandomPoint(Point from,Point to, int direction){
+        Random randompos = new Random();
+        Point out = new Point();
+        int pos;
+
+        switch(direction){
+
+            case HORIZONTAL:
+                pos = randompos.nextInt(to.x - from.x) + from.x;
+                out.setLocation(pos,to.y);
+                break;
+            case VERTICAL:
+                pos = randompos.nextInt(to.y - from.y) + from.y;
+                out.setLocation(to.x,pos);
+                break;
+        }
+        return out;
+    }
 
 
-
-private Random rnd = new Random();
-     
 }

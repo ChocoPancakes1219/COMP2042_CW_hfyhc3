@@ -21,16 +21,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.font.FontRenderContext;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
-import static test.Score.UpdateLeaderboard;
+import java.util.Scanner;
 
 
 /**
  * GameInterface.java
  * An class that extends JComponent and implements KeyListener,MouseListener and MouseMotionListener
  * Set up the display of Main Game
+ * Also read and save Leaderboard high score from file
  *
  * Created: by filippo on 04/09/16.
  *
@@ -42,29 +43,49 @@ import static test.Score.UpdateLeaderboard;
 public class GameInterface extends JComponent implements KeyListener,MouseListener,MouseMotionListener {
 
 
+    //Initialize Game Timer
     private Timer gameTimer;
 
+    //Initialize MainGame
     private MainGame mainGame;
 
+    //Initialize Message Display
     private String message;
     private String message2;
 
+    //Boolean where if pause menu is visible
     private boolean showPauseMenu;
 
-    private final Font menuFont;
+    //Font for Pause Menu
+    private final Font PauseMenuFont;
 
+    // Initialize Button Shape
     private Rectangle continueButtonRect;
     private Rectangle exitButtonRect;
     private Rectangle restartButtonRect;
+
+    //Initialize String Length
     private int strLen;
 
+    //Initialize Debug Console
     private DebugConsole debugConsole;
+
+    //Game Board Formatting
+    private static final String CONTINUE = "Continue";
+    private static final String RESTART = "Restart";
+    private static final String EXIT = "Exit";
+    private static final String PAUSE = "Pause Menu";
+    private static final int TEXT_SIZE = 30;
+    private static final Color MENU_COLOR = new Color(0,255,0);
+    private static final Color GameBoard_BG_COLOR = Color.WHITE;
+    private static final int GameBoard_WIDTH = 600;
+    private static final int GameBoard_HEIGHT = 450;
 
 
     /**
-     * Innitializer for Game Board
+     * Constructor for Game Interface
      */
-    public GameInterface(JFrame owner){
+    public GameInterface(JFrame owner) throws IOException {
         super();
 
         strLen = 0;
@@ -72,10 +93,11 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
 
 
 
-        menuFont = new Font("Monospaced",Font.PLAIN, Formatting.TEXT_SIZE);
+        PauseMenuFont = new Font("Monospaced",Font.PLAIN, TEXT_SIZE);
 
 
         this.initialize();
+        ReadHighScore();
         Setup(owner);
 
 
@@ -84,6 +106,19 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
 
     }
 
+    /**
+     * Setter to increase Score
+     */
+    public static void ScorePoint() {
+        Score.AddScore();
+    }
+
+    /**
+     * Setter to Deduct Score
+     */
+    public static void LosePoint() {
+        Score.DeductScore();
+    }
 
 
     /**
@@ -93,7 +128,7 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
     private void Setup(JFrame owner) {
         message = "";
         message2 = "";
-        mainGame = new MainGame(new Rectangle(0,0, Formatting.GameBoard_WIDTH, Formatting.GameBoard_HEIGHT),30,3,6/2,new Point(300,430));
+        mainGame = new MainGame(new Rectangle(0,0, GameBoard_WIDTH, GameBoard_HEIGHT),30,3,6/2,new Point(300,430));
 
         debugConsole = new DebugConsole(owner, mainGame,this);
         mainGame.nextLevel();
@@ -121,21 +156,45 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
                 CheckNextLevel();
             }
 
-            try {
-                FileWriter writer = new FileWriter("leaderboard.txt");
-                int len = Score.Leaderboard.length;
-                for (int j = 0; j < len; j++) {
-                    writer.write(Score.Leaderboard[j] + "\n");
-
-                }
-                writer.flush();
-
-            } catch(Exception ex) {
-                ex.printStackTrace();
-            }
+            SaveHighScore();
 
             repaint();
         });
+    }
+
+    /**
+     * Read the previous highscore from file, and create one if file does not exist
+     * @throws IOException if file not found
+     */
+    private void ReadHighScore() throws IOException {
+        File file = new File("src/assets/leaderboard.txt");
+        if(!file.exists())
+        {
+            file.createNewFile();
+        }
+        Scanner scanner = new Scanner(file);
+        int i = 0;
+        while(scanner.hasNextInt()&&i<=4){
+            Score.Leaderboard[i++] = scanner.nextInt();
+        }
+    }
+
+    /**
+     * Save Highscore by the end of each round to file
+     */
+    private void SaveHighScore() {
+        try {
+            FileWriter writer = new FileWriter("src/assets/leaderboard.txt");
+            int len = Score.Leaderboard.length;
+            for (int j = 0; j < len; j++) {
+                writer.write(Score.Leaderboard[j] + "\n");
+
+            }
+            writer.flush();
+
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -207,7 +266,7 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
      * Initialize sensors
      */
     private void initialize(){
-        this.setPreferredSize(new Dimension(Formatting.GameBoard_WIDTH, Formatting.GameBoard_HEIGHT));
+        this.setPreferredSize(new Dimension(GameBoard_WIDTH, GameBoard_HEIGHT));
         this.setFocusable(true);
         this.requestFocusInWindow();
         this.addKeyListener(this);
@@ -228,7 +287,7 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
 
         g2d.setColor(Color.BLUE);
         g2d.drawString(message,250,225);
-        g2d.drawString(message2,250,235);
+        g2d.drawString(message2,250,255);
 
         drawBall(mainGame.ball,g2d);
 
@@ -250,7 +309,7 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
      */
     private void clear(Graphics2D g2d){
         Color resetcolor = g2d.getColor();
-        g2d.setColor(Formatting.GameBoard_BG_COLOR);
+        g2d.setColor(GameBoard_BG_COLOR);
         g2d.fillRect(0,0,getWidth(),getHeight());
         g2d.setColor(resetcolor);
     }
@@ -314,7 +373,7 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
         g2d.setComposite(ac);
 
         g2d.setColor(Color.BLACK);
-        g2d.fillRect(0,0, Formatting.GameBoard_WIDTH, Formatting.GameBoard_HEIGHT);
+        g2d.fillRect(0,0, GameBoard_WIDTH, GameBoard_HEIGHT);
 
         g2d.setComposite(tmpcomposite);
         g2d.setColor(tmpColor);
@@ -329,18 +388,18 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
         Color tmpColor = g2d.getColor();
 
 
-        g2d.setFont(menuFont);
-        g2d.setColor(Formatting.MENU_COLOR);
+        g2d.setFont(PauseMenuFont);
+        g2d.setColor(MENU_COLOR);
 
         if(strLen == 0){
             FontRenderContext frc = g2d.getFontRenderContext();
-            strLen = menuFont.getStringBounds(Formatting.PAUSE,frc).getBounds().width;
+            strLen = PauseMenuFont.getStringBounds(PAUSE,frc).getBounds().width;
         }
 
         int x = (this.getWidth() - strLen) / 2;
         int y = this.getHeight() / 10;
 
-        g2d.drawString(Formatting.PAUSE,x,y);
+        g2d.drawString(PAUSE,x,y);
 
         x = this.getWidth() / 8;
         y = this.getHeight() / 4;
@@ -351,7 +410,7 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
             CreateContinueButton(x, y, frc);
         }
 
-        g2d.drawString(Formatting.CONTINUE,x,y);
+        g2d.drawString(CONTINUE,x,y);
 
         y *= 2;
 
@@ -359,7 +418,7 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
             CreateRestartButton(x, y);
         }
 
-        g2d.drawString(Formatting.RESTART,x,y);
+        g2d.drawString(RESTART,x,y);
 
         y *= 3.0/2;
 
@@ -367,7 +426,7 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
             CreateExitButton(x, y);
         }
 
-        g2d.drawString(Formatting.EXIT,x,y);
+        g2d.drawString(EXIT,x,y);
 
 
 
@@ -382,7 +441,7 @@ public class GameInterface extends JComponent implements KeyListener,MouseListen
      * @param frc font
      */
     private void CreateContinueButton(int x, int y, FontRenderContext frc) {
-        continueButtonRect = menuFont.getStringBounds(Formatting.CONTINUE, frc).getBounds();
+        continueButtonRect = PauseMenuFont.getStringBounds(CONTINUE, frc).getBounds();
         continueButtonRect.setLocation(x, y -continueButtonRect.height);
     }
 

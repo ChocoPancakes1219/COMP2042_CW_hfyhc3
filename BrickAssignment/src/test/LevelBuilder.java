@@ -4,8 +4,8 @@ import java.awt.*;
 
 /**
  * LevelBuilder.java
- * A class that Build the level by taking brick and make it into a wall from the condition of the level
- * Acts as the game physics of the level
+ * A class that Build the level by making a wall using Brick Maker
+ * Acts as the game indicator of the level
  *
  * Created: by filippo on 04/09/16.
  *
@@ -15,7 +15,7 @@ import java.awt.*;
  *
  */
 public class LevelBuilder {
-    static final int LEVELS_COUNT = 5;
+    static final int LEVELS_COUNT = 6;
     Brick[] bricks;
     Brick[][] levels;
     int level;
@@ -40,7 +40,7 @@ public class LevelBuilder {
 
 
     /**
-     * Default constructor of WallMaker
+     * Default constructor of LevelBuilder
      */
     public LevelBuilder() {
     }
@@ -89,34 +89,46 @@ public class LevelBuilder {
             p.setLocation(x, y);
 
             boolean b = ((line % 2 == 0 && i % 2 == 0) || (line % 2 != 0 && posX > centerLeft && posX <= centerRight));
-            TotalBricks[i] = b ? makeBrick(p, brickSize, typeA) : makeBrick(p, brickSize, typeB);
+
+
+            if(BrickMaker.Mutate()){
+                TotalBricks[i] = BrickMaker.makeBrick(p, brickSize, BrickMaker.RandomType());
+            }else{
+            TotalBricks[i] = b ? BrickMaker.makeBrick(p, brickSize, typeA) : BrickMaker.makeBrick(p, brickSize, typeB);}
         }
 
         for (double y = brickHgt; i < TotalBricks.length; i++, y += 2 * brickHgt) {
             double x = (brickOnLine * brickLen) - (brickLen / 2);
             p.setLocation(x, y);
-            TotalBricks[i] = makeBrick(p, brickSize, typeA);
+            if(BrickMaker.Mutate()){TotalBricks[i] = BrickMaker.makeBrick(p, brickSize, BrickMaker.RandomType());
+            }else{
+            TotalBricks[i] = BrickMaker.makeBrick(p, brickSize, typeA);}
         }
         return TotalBricks;
     }
 
+
+
     /**
      * Make a level
      * @param drawArea Area of wall
-     * @param brickCount Brick count
-     * @param lineCount Line of bricks
+     * @param DefaultBrickCount Brick count
+     * @param DeafaultLineCount Line of bricks
      * @param brickDimensionRatio brick dimension ratio
      * @return
      */
-    Brick[][] makeLevels(Rectangle drawArea, int brickCount, int lineCount, double brickDimensionRatio) {
+    Brick[][] makeLevels(Rectangle drawArea, int DefaultBrickCount, int DeafaultLineCount, double brickDimensionRatio) {
         Brick[][] Level = new Brick[LEVELS_COUNT][];
-        Level[0] = createWall(drawArea, brickCount, lineCount, brickDimensionRatio, BrickMaterial.CLAY, BrickMaterial.CLAY);
-        Level[1] = createWall(drawArea, brickCount, lineCount, brickDimensionRatio, BrickMaterial.CLAY, BrickMaterial.CEMENT);
-        Level[2] = createWall(drawArea, brickCount, lineCount, brickDimensionRatio, BrickMaterial.CLAY, BrickMaterial.STEEL);
-        Level[3] = createWall(drawArea, brickCount, lineCount, brickDimensionRatio, BrickMaterial.STEEL, BrickMaterial.CEMENT);
-        Level[4] = createWall(drawArea, brickCount, lineCount, brickDimensionRatio, BrickMaterial.STEEL, BrickMaterial.STEEL);
+        Level[0] = createWall(drawArea, DefaultBrickCount, DeafaultLineCount, brickDimensionRatio, BrickMaker.CLAY, BrickMaker.CLAY);
+        Level[1] = createWall(drawArea, DefaultBrickCount, DeafaultLineCount, brickDimensionRatio, BrickMaker.CLAY, BrickMaker.CEMENT);
+        Level[2] = createWall(drawArea, DefaultBrickCount, DeafaultLineCount, brickDimensionRatio, BrickMaker.CLAY, BrickMaker.STEEL);
+        Level[3] = createWall(drawArea, DefaultBrickCount, DeafaultLineCount, brickDimensionRatio, BrickMaker.STEEL, BrickMaker.CEMENT);
+        Level[4] = createWall(drawArea, DefaultBrickCount*3, DeafaultLineCount*3, brickDimensionRatio, BrickMaker.CEMENT, BrickMaker.CLAY);
+        Level[5] = createWall(drawArea, DefaultBrickCount*4, DeafaultLineCount*4, brickDimensionRatio*1.3, BrickMaker.CEMENT, BrickMaker.STEEL);
         return Level;
     }
+
+
 
     /**
      * Jump to next level
@@ -124,31 +136,6 @@ public class LevelBuilder {
     public void nextLevel() {
         bricks = levels[level++];
         this.brickCount = bricks.length;
-    }
-
-    /**
-     * Make a brick based on material
-     * @param point position of brick
-     * @param size size of brick
-     * @param type type of material
-     * @return brick
-     */
-    Brick makeBrick(Point point, Dimension size, int type) {
-        Brick newBrick;
-        switch (type) {
-            case BrickMaterial.CLAY:
-                newBrick = new ClayBrick(point, size);
-                break;
-            case BrickMaterial.STEEL:
-                newBrick = new SteelBrick(point, size);
-                break;
-            case BrickMaterial.CEMENT:
-                newBrick = new CementBrick(point, size);
-                break;
-            default:
-                throw new IllegalArgumentException(String.format("Unknown Type:%d\n", type));
-        }
-        return newBrick;
     }
 
     /**

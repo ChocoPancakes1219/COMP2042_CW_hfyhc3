@@ -22,7 +22,6 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.io.*;
-import java.util.Scanner;
 
 /**
  * GameFrame.java
@@ -72,22 +71,12 @@ public class GameFrame extends JFrame implements WindowFocusListener {
 
         this.setLayout(new BorderLayout());
 
+
         gameInterface = new GameInterface(this);
 
         homeMenu = new HomeMenu(this,new Dimension(450,300));
 
         this.add(homeMenu,BorderLayout.CENTER);
-
-        File file = new File("leaderboard.txt");
-        if(!file.exists())
-        {
-            file.createNewFile();
-        }
-        Scanner scanner = new Scanner(file);
-        int i = 0;
-        while(scanner.hasNextInt()&&i<=4){
-            Score.Leaderboard[i++] = scanner.nextInt();
-        }
 
 
 
@@ -97,6 +86,10 @@ public class GameFrame extends JFrame implements WindowFocusListener {
 
 
     }
+
+
+
+
 
 
     /**

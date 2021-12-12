@@ -33,15 +33,15 @@ abstract public class Ball {
     private int speedX;
     private int speedY;
 
-    /**
-     * Take In Variables and create a ball
-     *
-     * @param center is the center point of the ball
-     * @param radiusA is the distance from ball center to border in x axis
-     * @param radiusB is the distance from ball center to border in y axis
-     * @param inner is the inner colour fill for the ball
-     * @param border is the outer colour on the ball border
-     */
+
+     /**
+      * Constructor for Game Object Ball
+      * @param center is the center point of the ball
+      * @param radiusA is the distance from ball center to border in x axis
+      * @param radiusB is the distance from ball center to border in y axis
+      * @param inner is the inner colour fill for the ball
+      * @param border is the outer colour on the ball border
+      */
     public Ball(Point2D center,int radiusA,int radiusB,Color inner,Color border){
         this.center = center;
 
@@ -76,16 +76,23 @@ abstract public class Ball {
         right.setLocation(center.getX()+(radiusA /2), center.getY());
     }
 
+
+
      /**
       * Draw The Ball Object
+      * @param center center of point
+      * @param radiusA is the distance from ball center to border in x axis
+      * @param radiusB is the distance from ball center to border in y axis
+      * @return the ball
       */
-    protected abstract Shape drawBall(Point2D center, int radiusA, int radiusB);
+     protected abstract Shape drawBall(Point2D center, int radiusA, int radiusB);
 
 
      /**
       * Controls the movement of the ball
       */
-    public void move(){
+
+     public void move(){
         RectangularShape path = (RectangularShape) Ballpath;
         center.setLocation((center.getX() + speedX),(center.getY() + speedY));
         double w = path.getWidth();
@@ -100,26 +107,28 @@ abstract public class Ball {
 
      /**
       * Change the speed and direction of the ball
-      * @param x is the movement on x axis
-      * @param y is the movement on y axis
+      * @param xSpeed is the movement on x axis
+      * @param ySpeed is the movement on y axis
       */
-    public void setSpeed(int x,int y){
-        speedX = x;
-        speedY = y;
+    public void setSpeed(int xSpeed,int ySpeed){
+        speedX = xSpeed;
+        speedY = ySpeed;
     }
 
      /**
       * Change the ball movement in only x axis
+      * @param SpeedX speed
       */
-    public void setXSpeed(int s){
-        speedX = s;
+    public void setXSpeed(int SpeedX){
+        speedX = SpeedX;
     }
 
      /**
       * Change the ball movement in only y axis
+      * @param SpeedY speed
       */
-    public void setYSpeed(int s){
-        speedY = s;
+    public void setYSpeed(int SpeedY){
+        speedY = SpeedY;
     }
 
      /**
@@ -210,6 +219,7 @@ abstract public class Ball {
     public int getSpeedY(){
         return speedY;
     }
+
 
 
 }

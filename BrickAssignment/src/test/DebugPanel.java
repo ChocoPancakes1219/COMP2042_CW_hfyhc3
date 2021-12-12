@@ -25,7 +25,7 @@ import java.awt.event.ActionListener;
 
 /**
  * DebugPanel.java
- * An class that controls over variables in the game
+ * A class for controller to change the variables of the game
  *
  * Created: by filippo on 04/09/16.
  *
@@ -48,7 +48,7 @@ public class DebugPanel extends JPanel {
     private MainGame mainGame;
 
     /**
-     * Main class for DebugPanel.java
+     * Constructor for DebugPanel.java
      * @param mainGame info of current level
      */
     public DebugPanel(MainGame mainGame){
@@ -116,7 +116,7 @@ public class DebugPanel extends JPanel {
     }
 
     /**
-     * Set values of ball speed & direction
+     * Set values of ball speed and direction
      * @param x ball direction and speed on x axis
      * @param y ball direction and speed on y axis
      */

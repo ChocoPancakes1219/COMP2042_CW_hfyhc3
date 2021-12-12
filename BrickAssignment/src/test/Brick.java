@@ -3,7 +3,6 @@ package test;
 import java.awt.*;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.util.Random;
 
 /**
  * Brick.java
@@ -18,57 +17,44 @@ import java.util.Random;
  */
 abstract public class Brick  {
 
-    public static final int MIN_CRACK = 1;
-    public static final int DEF_CRACK_DEPTH = 1;
-    public static final int DEF_STEPS = 35;
-
-
-    private int crackDepth;
-    private int steps;
-    
-    Crack crack = new Crack(crackDepth,steps);
-
-
-    /**
-     * Call createcrack method in crack.java
-     * @param point is the point of impact
-     * @param direction is the direction to create the crack
-     */
-   protected void makeCrack(Point2D point, int direction)
-   {
-       crack.createCrack(Brick.this,point,direction);
-    }
 
 
 
-    private String name;
+    public static final int UP_IMPACT = 100;
+    public static final int DOWN_IMPACT = 200;
+    public static final int LEFT_IMPACT = 300;
+    public static final int RIGHT_IMPACT = 400;
+
+
     Shape brickFace;
 
     private Color border;
     private Color inner;
 
     private int fullStrength;
-    private int durability;
+    private int strength;
 
-    public boolean broken;
+    private boolean broken;
 
-    private static Random rnd;
+
 
     /**
-     * Main class that takes in all the info for the brick
-     *
+     * Constuctor for Brick
+     * @param name Name of Brick
+     * @param pos position of brick
+     * @param size size of brick
+     * @param border border colour of brick
+     * @param inner inner fill colour of brick
+     * @param Durability durability of brick
      */
-    public Brick(String name, Point pos,Dimension size,Color border,Color inner,int durability){
-        rnd = new Random();
+    public Brick(String name, Point pos,Dimension size,Color border,Color inner,int Durability){
         broken = false;
-        this.name = name;
         brickFace = makeBrickFace(pos,size);
         this.border = border;
         this.inner = inner;
-        this.fullStrength = this.durability = durability;
+        this.fullStrength = this.strength = Durability;
 
     }
-
 
     /**
      * Seperate identification of each individual bricks
@@ -77,7 +63,6 @@ abstract public class Brick  {
      * @param size is the size of the brick
      */
     protected abstract Shape makeBrickFace(Point pos,Dimension size);
-
 
     /**
      * When the ball impact the brick
@@ -93,7 +78,7 @@ abstract public class Brick  {
     }
 
     /**
-     * @return Info of the brick to be drawn
+     * @return Shape of the brick to be drawn
      */
     public abstract Shape getBrick();
 
@@ -114,6 +99,26 @@ abstract public class Brick  {
 
 
     /**
+     * Find the impact point of the ball on the brick
+     * @param b is the info of the ball
+     * @return direction where the impact comes from
+     */
+    public final int findImpact(Ball b){
+        if(broken)
+            return 0;
+        int out  = 0;
+        if(brickFace.contains(b.right))
+            out = LEFT_IMPACT;
+        else if(brickFace.contains(b.left))
+            out = RIGHT_IMPACT;
+        else if(brickFace.contains(b.up))
+            out = DOWN_IMPACT;
+        else if(brickFace.contains(b.down))
+            out = UP_IMPACT;
+        return out;
+    }
+
+    /**
      *
      * @return if the brick is broken
      */
@@ -126,7 +131,7 @@ abstract public class Brick  {
      */
     public void repair() {
         broken = false;
-        durability = fullStrength;
+        strength = fullStrength;
     }
 
     /**
@@ -134,11 +139,10 @@ abstract public class Brick  {
      * A brick is considered broken if durability reaches 0
      */
     public void impact(){
-        durability--;
-        broken = (durability == 0);
+        strength--;
+        broken = (strength == 0);
     }
 
 
 
 }
-

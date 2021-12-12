@@ -18,6 +18,8 @@ import java.awt.geom.Point2D;
  *
  */
 public class CementBrick extends Brick {
+    public static final int DEF_CRACK_DEPTH = 1;
+    public static final int DEF_STEPS = 35;
 
 
     private static final String NAME = "Cement Brick";
@@ -36,7 +38,7 @@ public class CementBrick extends Brick {
      */
     public CementBrick(Point point, Dimension size){
         super(NAME,point,size, CementBrick_Border_Color, CementBrick_Inner_Color,CEMENT_STRENGTH);
-        crack = new Crack(DEF_CRACK_DEPTH,DEF_STEPS);
+        crack = new Crack(this, DEF_CRACK_DEPTH,DEF_STEPS);
         brickFace = super.brickFace;
     }
 
@@ -67,7 +69,7 @@ public class CementBrick extends Brick {
             return false;
         super.impact();
         if(!super.isBroken()){
-            makeCrack(point,dir);
+            crack.makeCrack(point,dir);
             updateBrick();
             return false;
         }
